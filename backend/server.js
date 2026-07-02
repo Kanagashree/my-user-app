@@ -1,21 +1,27 @@
+require('dotenv').config(); // Ye sabse upar
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connect - Atlas wali
-mongoose.connect('mongodb+srv://tkanagashree_db_user:JKBXO3tcsIoR4GXM@cluster0.eowqpsf.mongodb.net/userdb?retryWrites=true&w=majority&appName=Cluster0')
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+// MongoDB connect - ab env se aayega
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log("MongoDB Error:", err));
 
-// Routes
+// Routes - tu already routes folder use kar rahi hai
 app.use('/api', require('./routes/user'));
+
+// Test route
+app.get('/', (req, res) => {
+  res.send('Backend is running');
+});
 
 // Server start
 app.listen(PORT, () => {
